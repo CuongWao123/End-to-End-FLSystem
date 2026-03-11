@@ -1,2 +1,8 @@
 superlink-certificates
 state
+data
+__pycache__
+
+venv
+
+*.png
