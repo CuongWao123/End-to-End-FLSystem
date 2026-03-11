@@ -6,6 +6,9 @@ from flwr.serverapp import Grid, ServerApp
 from flwr.serverapp.strategy import FedAvg
 
 from pytorchexample.task import Net, load_centralized_dataset, test
+from storage.DB import MinIOClient
+from datetime import datetime  
+
 
 # Create ServerApp
 app = ServerApp()
@@ -38,8 +41,17 @@ def main(grid: Grid, context: Context) -> None:
 
     # Save final model to disk
     print("\nSaving final model to disk...")
+    # save locally 
     state_dict = result.arrays.to_torch_state_dict()
     torch.save(state_dict, "final_model.pt")
+
+    # save to Minio 
+    print("Saving final model to MinIO...")
+    minio_client = MinIOClient()
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    object_name = f"models/final_model_{timestamp}.pt"
+    minio_client.save_model(state_dict, object_name)
+
 
 
 def global_evaluate(server_round: int, arrays: ArrayRecord) -> MetricRecord:
