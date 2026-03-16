@@ -10,6 +10,7 @@ import io
 import uvicorn
 
 from engine.inference import ModelInference
+from prometheus_client import make_asgi_app
 
 
 app = FastAPI(
@@ -20,6 +21,10 @@ app = FastAPI(
 
 # Global inference instance
 inferencer = None
+
+metrics_app = make_asgi_app()
+
+app.mount("/metrics", metrics_app)
 
 
 class PredictionResponse(BaseModel):

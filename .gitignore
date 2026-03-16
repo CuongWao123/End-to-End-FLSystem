@@ -6,3 +6,11 @@ __pycache__
 venv
 
 *.png
+
+learning
+
+airflow-data
+dags
+config
+logs
+plugins
